@@ -7,7 +7,7 @@ from tqdm import tqdm
 import numpy as np
 import torch
 import math
-from .Game import Game
+from Game import Game #used to be relative import: from .Game import Game
 
 log = logging.getLogger(__name__)
 
