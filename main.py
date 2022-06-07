@@ -1,5 +1,4 @@
 import logging
-
 import coloredlogs
 
 from Coach import Coach
@@ -7,6 +6,7 @@ from othello.OthelloGame import OthelloGame as Game
 from othello.pytorch.NNet import NNetWrapper as nn
 from utils import *
 
+#logs are written to the console (this is by default)
 log = logging.getLogger(__name__)
 
 coloredlogs.install(level='INFO')  # Change this to DEBUG to see more info.

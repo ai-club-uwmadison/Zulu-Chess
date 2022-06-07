@@ -55,6 +55,7 @@ class Game():
         print(self._token(int(board_only[0,5].item())),end='-'*30)
         print(self._token(int(board_only[0,4].item())))
         print()
+
         data = board[1]
         print('player 1 (O) remaining cows: ',int(data[0].item()))
         print('player -1 (X) remaining cows:',int(data[1].item()))
@@ -67,6 +68,7 @@ class Game():
         print('game state: ', 'place tokens' if data[8] == 0 else 'move/fly tokens')
         print('available actions:', self.getValidMoves(board,player))
         print('game end?', self.getGameEnded(board,player))
+
     def getInitBoard(self):
         """
         Returns:
@@ -225,6 +227,7 @@ class Game():
 
                     captured = True
                     row_capture_count[str(player)] += 1
+        
         #check captures across squares
         for i in range(8):
             if board_only[0][i] == player and board_only[1][i] == player and board_only[2][i] == player:
@@ -232,7 +235,6 @@ class Game():
 
                 captured = True
                 row_capture_count[str(player)] += 1
-
 
         print('total row capture count (for current player):',row_capture_count[str(player)], 'last row capture count (for current player):',last_row_captured_count[str(player)])
         if row_capture_count[str(player)] >= last_row_captured_count[str(player)] and captured:
@@ -268,8 +270,6 @@ class Game():
 
         neighbors = [int(e.item()) for e in neighbors]
         return torch.LongTensor(neighbors)
-
-
 
     def getValidMoves(self, board, player):
         """
@@ -369,14 +369,6 @@ class Game():
                             action_vector[neighbor] = 1
         return action_vector
 
-
-
-
-
-
-
-
-
     def getGameEnded(self, board, player):
         """
         Input:
@@ -462,7 +454,7 @@ class Game():
 
         return boardString
 
-
+######################################################################################################################
 
 def play():
     game = Game()
@@ -523,11 +515,15 @@ def play():
         print('player',player,'\'s turn')
         valid_moves = game.getValidMoves(board,player)
         if valid_moves.sum() < 0.001:
+            if game.getValidMoves(board,-player).sum() < 0.001:
+                end = game.getGameEnded(board,player)
+                print('Game ended with a reward of ',end,'for both players')
+                break
             print('no valid moves for player',player,'; skipping turn.')
             player = -player
             continue
         action = int(input('Type action: (0-24), from outer square to inner square clockwise from top left corner:\n'))
-        if action > 24 or action < 0 or valid_moves[action] == 0:
+        if action >= 24 or action < 0 or valid_moves[action] == 0:
             print('Invalid action! try again!')
             continue
         board, player, last_row_captured_count = game.getNextState(board,player,action,last_row_captured_count)
@@ -535,7 +531,5 @@ def play():
         if end != 0:
             print('Game ended with a reward of ',end,'for player',player)
             break
-
-
 
 play()
