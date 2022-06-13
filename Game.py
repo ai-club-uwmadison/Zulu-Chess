@@ -238,7 +238,7 @@ class Game():
                     #row captured!
 
                     captured = True
-                    row_capture_count[str(player)] += 1
+                    row_capture_count[str(player)].append([pattern[0]*(i+1),pattern[1]*(i+1),pattern[2]*(i+1)])
         
         #check captures across squares
         for i in range(8):
